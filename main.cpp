@@ -24,6 +24,10 @@ void executarExperimento(const string& nome_instancia, const string& caminho_arq
     // Cabeçalho do CSV
     arquivo_csv << "Execucao,Algoritmo,MelhorCusto\n";
 
+    string nome_conv = "Results/convergencia_" + nome_instancia + ".csv";
+    ofstream arquivo_conv(nome_conv);
+    arquivo_conv << "Execucao,Avaliacoes,MelhorCustoGlobal,MediaPopulacao,Algoritmo\n";
+
     cout << "A iniciar experimento para: " << nome_instancia << " (" << repeticoes << " repeticoes)" << endl;
 
     for (int i = 1; i <= repeticoes; i++) {
@@ -41,12 +45,12 @@ void executarExperimento(const string& nome_instancia, const string& caminho_arq
         // 2. Simulated Annealing
         vector<int> rota_ini_sa = gerarRotaAleatoria(prob.n, rng);
         // Exemplo de parâmetros: T_inicial = 1000, alpha = 0.99 (ajustar conforme a instância)
-        vector<int> otimo_sa = executarSimulatedAnnealing(rota_ini_sa, prob, limite_avaliacoes, 1000.0, 0.99, rng);
+        vector<int> otimo_sa = executarSimulatedAnnealing(rota_ini_sa, prob, limite_avaliacoes, 1000.0, 0.99, rng, arquivo_conv, i);
         arquivo_csv << i << ",SimulatedAnnealing," << prob.calculaFitness(otimo_sa) << "\n";
 
         // 3. Genetic Algorithm
         // Exemplo: População = 50, Taxa de mutação = 0.1
-        vector<int> otimo_ga = executarGA(prob, limite_avaliacoes, 50, 0.1, rng);
+        vector<int> otimo_ga = executarGA(prob, limite_avaliacoes, 50, 0.1, rng, arquivo_conv, i);
         arquivo_csv << i << ",GeneticAlgorithm," << prob.calculaFitness(otimo_ga) << "\n";
 
         cout << "Execucao " << i << " concluida." << endl;
@@ -59,10 +63,10 @@ void executarExperimento(const string& nome_instancia, const string& caminho_arq
 int main() {
     // Orçamentos definidos na Secção 3 do guião
     // Instância Pequena: 50.000 avaliações, 30 execuções
-    //executarExperimento("pequena", "instancias/manutencao_pequena.txt", 50000, 30);
+    executarExperimento("pequena", "instancias/manutencao_pequena.txt", 50000, 30);
     
     // Instância Intermédia: 150.000 avaliações, 30 execuções
-     //executarExperimento("media", "instancias/manutencao_media.txt", 150000, 30);
+     executarExperimento("media", "instancias/manutencao_media.txt", 150000, 30);
     
     // Instância Grande: 300.000 avaliações, 10 execuções[cite: 6]
      executarExperimento("grande", "instancias/manutencao_grande.txt", 300000, 10);

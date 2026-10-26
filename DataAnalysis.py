@@ -24,7 +24,7 @@ def gerar_boxplot(ficheiro_csv, nome_instancia):
     plt.ylabel("Custo (Atraso Ponderado Total h)", fontsize=12)
     plt.xlabel("Algoritmo", fontsize=12)
     
-    nome_saida = f"boxplot_{nome_instancia}.png"
+    nome_saida = f"Graphs/boxplot_{nome_instancia}.png"
     plt.savefig(nome_saida, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Boxplot guardado como: {nome_saida}")
@@ -45,16 +45,19 @@ def gerar_curva_convergencia(ficheiro_csv, nome_instancia):
     plt.ylabel("Melhor Custo Encontrado", fontsize=12)
     plt.xlabel("Número de Avaliações", fontsize=12)
     
-    nome_saida = f"convergencia_{nome_instancia}.png"
+    nome_saida = f"Graphs/convergencia_{nome_instancia}.png"
     plt.savefig(nome_saida, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Curva de convergência guardada como: {nome_saida}")
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     # Gera o boxplot para a instância pequena 
-    #gerar_boxplot("Results/resultados_pequena.csv", "pequena")
-    #gerar_boxplot("Results/resultados_media.csv", "media")
-    #gerar_boxplot("Results/resultados_grande.csv", "grande")
+    gerar_boxplot("Results/resultados_pequena.csv", "pequena")
+    gerar_boxplot("Results/resultados_media.csv", "media")
+    gerar_boxplot("Results/resultados_grande.csv", "grande")
+    gerar_curva_convergencia("Results/convergencia_pequena.csv", "pequena")
+    gerar_curva_convergencia("Results/convergencia_media.csv", "media")
+    gerar_curva_convergencia("Results/convergencia_grande.csv", "grande")
 
 def aplicar_teste_estatistico(ficheiro_csv):
     # Lê os dados guardados em disco

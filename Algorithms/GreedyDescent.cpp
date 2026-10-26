@@ -40,6 +40,7 @@ vector<int> executarGreedyDescent(const vector<int>& rota_inicial, const Problem
             melhor_rota_local = melhor_vizinho;
             menor_custo_local = menor_custo_vizinhanca;
         }
+        
     }
     return melhor_rota_local;
 }

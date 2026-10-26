@@ -1,6 +1,7 @@
 #include "SimulatedAnnealing.hpp"
 #include <cmath>
 #include <algorithm>
+#include <fstream>
 
 vector<int> aplicarSwapAleatorio(const vector<int>& rota, mt19937& rng) {
     vector<int> vizinho = rota;
@@ -11,7 +12,7 @@ vector<int> aplicarSwapAleatorio(const vector<int>& rota, mt19937& rng) {
     return vizinho;
 }
 
-vector<int> executarSimulatedAnnealing(const vector<int>& rota_inicial, const ProblemaManutencao& prob, int limite_avaliacoes, double T_inicial, double alpha, mt19937& rng) {
+vector<int> executarSimulatedAnnealing(const vector<int>& rota_inicial, const ProblemaManutencao& prob, int limite_avaliacoes, double T_inicial, double alpha, mt19937& rng, ofstream& log_conv, int execucao) {
     vector<int> rota_atual = rota_inicial;
     vector<int> melhor_rota = rota_inicial;
     
@@ -42,6 +43,10 @@ vector<int> executarSimulatedAnnealing(const vector<int>& rota_inicial, const Pr
 
         // Resfriamento geométrico[cite: 5]
         T *= alpha; 
+        if (avaliacoes_gastas % 100 == 0) {
+            log_conv << execucao << "," << avaliacoes_gastas << "," << melhor_custo << ",,SimulatedAnnealing\n";
+        }
+        
     }
 
     return melhor_rota;

@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <numeric>
 #include <unordered_set>
+#include <fstream>
 
 // Order Crossover (OX) para permutações[cite: 5]
 vector<int> cruzamentoOX(const vector<int>& pai1, const vector<int>& pai2, mt19937& rng) {
@@ -36,7 +37,7 @@ vector<int> cruzamentoOX(const vector<int>& pai1, const vector<int>& pai2, mt199
     return filho;
 }
 
-vector<int> executarGA(const ProblemaManutencao& prob, int limite_avaliacoes, int tamanho_populacao, double taxa_mutacao, mt19937& rng) {
+vector<int> executarGA(const ProblemaManutencao& prob, int limite_avaliacoes, int tamanho_populacao, double taxa_mutacao, mt19937& rng, ofstream& log_conv, int execucao) {
     int avaliacoes_gastas = 0;
     vector<vector<int>> populacao(tamanho_populacao, vector<int>(prob.n));
     vector<double> fitness_pop(tamanho_populacao);
@@ -81,18 +82,22 @@ vector<int> executarGA(const ProblemaManutencao& prob, int limite_avaliacoes, in
         }
 
         populacao = nova_populacao;
+        double soma_fitness = 0.0;
 
         for (int i = 0; i < tamanho_populacao; i++) {
             if (avaliacoes_gastas >= limite_avaliacoes) break;
             fitness_pop[i] = prob.calculaFitness(populacao[i]);
             avaliacoes_gastas++;
 
+            soma_fitness += fitness_pop[i];
+
             if (fitness_pop[i] < melhor_custo_global) {
                 melhor_custo_global = fitness_pop[i];
                 melhor_rota_global = populacao[i];
             }
         }
-    }
+        
+        log_conv << execucao << "," << avaliacoes_gastas << "," << melhor_custo_global << "," << (soma_fitness / tamanho_populacao) << ",GeneticAlgorithm\n";    }
 
     return melhor_rota_global;
 }
