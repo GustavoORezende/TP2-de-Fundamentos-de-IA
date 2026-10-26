@@ -15,7 +15,7 @@ vector<int> aplicarSwapAleatorio(const vector<int>& rota, mt19937& rng) {
 vector<int> executarSimulatedAnnealing(const vector<int>& rota_inicial, const ProblemaManutencao& prob, int limite_avaliacoes, double T_inicial, double alpha, mt19937& rng, ofstream& log_conv, int execucao) {
     vector<int> rota_atual = rota_inicial;
     vector<int> melhor_rota = rota_inicial;
-    
+
     double custo_atual = prob.calculaFitness(rota_atual);
     double melhor_custo = custo_atual;
     double T = T_inicial;
@@ -30,7 +30,7 @@ vector<int> executarSimulatedAnnealing(const vector<int>& rota_inicial, const Pr
 
         double delta = custo_vizinho - custo_atual;
 
-        // Se for melhor, ou se a probabilidade de Gibbs permitir a piora
+        // Aceita soluções piores com probabilidade decrescente para escapar de mínimos locais.
         if (delta <= 0 || probabilidade(rng) < exp(-delta / T)) {
             rota_atual = vizinho;
             custo_atual = custo_vizinho;
@@ -41,12 +41,11 @@ vector<int> executarSimulatedAnnealing(const vector<int>& rota_inicial, const Pr
             }
         }
 
-        // Resfriamento geométrico[cite: 5]
-        T *= alpha; 
+        // O resfriamento gradual reduz a exploração à medida que a temperatura desce.
+        T *= alpha;
         if (avaliacoes_gastas % 100 == 0) {
             log_conv << execucao << "," << avaliacoes_gastas << "," << melhor_custo << ",,SimulatedAnnealing\n";
         }
-        
     }
 
     return melhor_rota;
